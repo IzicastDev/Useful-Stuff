@@ -21,7 +21,7 @@
  *
  * // Function call and display the
  * // variable name
- *     > print getVariavleName($test);
+ *     > print getVariableName($test);
  *
  * //Output:
  *     > test
@@ -29,7 +29,7 @@
  * @param [string] $var
  * @return [string] $varName <> Returns the variable name
  ***************************************************************************/
-        function getVariavleName($var) {
+        function getVariableName($var) {
             foreach($GLOBALS as $varName => $value) {
                 if ($value === $var) {
                     return $varName;

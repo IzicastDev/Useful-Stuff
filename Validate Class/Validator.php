@@ -5,7 +5,7 @@ class Validator {
   private $data = [];
   private $errors = [];
   // Fields in this form
-  private static $fields = ['username', 'email', 'intvalue', 'range', 'str'];
+  private static $fields = ['username', 'email', 'valueint', 'range', 'str', 'date'];
   
   // Good Caracteres allowed on a string
   private $allowedChars =[
@@ -78,11 +78,12 @@ class Validator {
         }
         
         // Validate each field
-        $this->validateUsername($this->data['username']);
+        $this->validateUsername($this->data['username'], "username");
         $this->validateEmail($this->data['email']);
-        $this->validateInteger($this->data['intvalue']);
+        $this->validateInteger($this->data['valueint']);
         $this->validateIntRange($this->data['range'], 10, 20);
         $this->whiteListString($this->data['str'], $this->allowedChars);
+        $this->validateDate($this->data['date']);
         return $this->errors;
 
   }//end function
@@ -92,18 +93,25 @@ class Validator {
 /**
  * VALIDATE USERNAME
  * 
- * user name needs to be between 6-12 characters
+ * user name needs to be:
+ *              - between 6-12 characters
+ *              - Can only start with a letter
+ *              - can only end with a letter or number
+ *              - the underscore(_) is allowed 
+ *
+ * @param string $val - Enter username to validate
+ * @param string $fieldname - We need the field name to return the error of that specific field
  * @return void
  ***************************************************************************/
-  private function validateUsername($val){
+  private function validateUsername($val, $fieldname, $min=6, $max=30){
         
         $val = trim($val);
         
         if(empty($val)){
-          $this->addError('username', 'username cannot be empty');
+          $this->addError($fieldname, 'username cannot be empty');
         } else {
-          if(!preg_match('/^[a-zA-Z0-9]{6,20}$/', $val)){
-            $this->addError('username','username must be 6-12 chars & alphanumeric');
+          if(!preg_match('/^[a-zA-Z][0-9a-zA-Z_]{' .$min.','.$max.'}[0-9a-zA-Z]$/', $val)){
+            $this->addError($fieldname,'username must be '.$min.'-'.$max.' chars & alphanumeric & _');
           }
         }     
   } // end function
@@ -161,8 +169,8 @@ class Validator {
  * 
  * STEP 2) to validate a string
  * 
- * @param [string] $str - Enter the string
- * @param [int]    $size - the maximum size allowed for this string
+ * @param string $str - Enter the string
+ * @param int    $size - the maximum size allowed for this string
  * @return void
   ***************************************************************************/
     public function validateStringSize($str, $size){
@@ -170,11 +178,31 @@ class Validator {
           //$str = trim($str);
 
           if( mb_strlen($str,'utf-8') > $size ){
-            $this->addError('intvalue', 'Value exceded');
+            $this->addError('valueint', 'Value exceded');
           
-          } 
-    
-}// end function
+          }   
+    }// end function
+
+
+
+/**
+ * VALIDATE DATE (YYYY-MM-DD)
+ * 
+ * user name needs to be between 6-12 characters
+ * @return void
+ ***************************************************************************/
+      private function validateDate($date){
+              
+          $date = trim($date);
+          
+          if(empty($date)){
+            $this->addError('date', 'date cannot be empty');
+          } elseif (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $date)) {
+              $this->addError('date','date must be in the format YYYY-MM-DD');
+          }
+               
+      } // end function
+
 
 
 
@@ -190,15 +218,18 @@ class Validator {
   
         $val = (int) trim($val);
         
-        if( !($val >= PHP_INT_MIN  && $val <= PHP_INT_MAX ) && !($val === 0) ){
-          $this->addError('intvalue', 'Value exceded');
+        if(empty($val)){
+          $this->addError('valueint', 'Value cannot be empty');
+        
+        }elseif( !($val >= PHP_INT_MIN  && $val <= PHP_INT_MAX ) && !($val === 0) ){
+          $this->addError('valueint', 'Value exceded');
         
         } elseif (is_string($val) && !ctype_digit($val)) {
-            $this->addError('intvalue', 'contains non digit characters');
+            $this->addError('valueint', 'contains non digit characters');
             //return false; // contains non digit characters
 
         } elseif (!is_int((int) $val)) {
-               $this->addError('intvalue', 'You enter values not allowed');
+               $this->addError('valueint', 'You enter values not allowed');
               //return false; // other non-integer value or exceeds PHP_INT_MAX
         }
         

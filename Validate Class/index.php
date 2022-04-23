@@ -35,6 +35,12 @@ error_reporting(E_ALL);
         <div class="error">
           <?php echo $errors['username'] ?? '' ?>
         </div>
+     <!-- DATE -->
+        <label>date (YYYY-MM-DD): </label>
+        <input type="text" name="date" value="<?php echo htmlspecialchars($_POST['date'] ?? '') ?>">
+        <div class="error">
+          <?php echo $errors['date'] ?? '' ?>
+        </div>
         
       <!-- STRING -->
         <label>string: </label>
@@ -52,9 +58,9 @@ error_reporting(E_ALL);
         
       <!-- INTEGER-->
         <label>integer value: </label>
-        <input type="text" name="intvalue" value="<?php echo htmlspecialchars($_POST['intvalue'] ?? '') ?>">
+        <input type="text" name="valueint" value="<?php echo htmlspecialchars($_POST['valueint'] ?? '') ?>">
         <div class="error">
-          <?php echo $errors['intvalue'] ?? '' ?>
+          <?php echo $errors['valueint'] ?? '' ?>
         </div>
         
       <!-- INTEGER RANGE-->
