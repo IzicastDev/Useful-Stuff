@@ -2,8 +2,8 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-  require('validator.php');
+  require_once "../Utils/utils.php";
+  require_once('validator.php');
 
   $errors = [];
 

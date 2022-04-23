@@ -52,7 +52,7 @@
  * @return string $randomString  The token generated
  ***************************************************************************/
         function generateToken( $length = 25,
-                                $secretKey = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';) {
+                                $secretKey = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
         
             $secretKeyLength = strlen($secretKey);
             $randomString = '';
