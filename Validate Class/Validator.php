@@ -2,8 +2,12 @@
 
 class Validator {
 
+  // LIMITS
+  private $maxStringLength = 1024; // Charateres
+
   private $data = [];
   private $errors = [];
+  
   // Fields in this form
   private static $fields = ['username', 'email', 'valueint', 'range', 'str', 'date'];
   
@@ -123,14 +127,17 @@ class Validator {
  *
  * @return void
  ***************************************************************************/
-  private function validateEmail($val){
+  private function validateEmail($email){
 
-        $val = trim($val);
+        $val = trim($email);
+        $charSize = 255;
     
-        if(empty($val)){
+        if(empty($email)){
             $this->addError('email', 'email cannot be empty');
+        } elseif( $this->validateStrLength($email) ){
+            $this->addError('email', 'email size is to big');    
         } else {
-          if(!filter_var($val, FILTER_VALIDATE_EMAIL)){
+          if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
             $this->addError('email', 'email must be a valid email address');
           }
         }
@@ -154,6 +161,9 @@ class Validator {
         
         if(empty($str)){
             $this->addError('str', 'string is empty');
+        } elseif( $this->validateStrLength($str) ){
+            $this->addError('str', 'String length not allowed.');
+        
         
         } elseif ( !ctype_alnum(str_replace($validArray, '', $str)) ){
             $this->addError('str','caracteres not allowed');
@@ -182,6 +192,31 @@ class Validator {
           
           }   
     }// end function
+
+
+
+/**
+ * VAlidates the size of a string
+ *
+ * By default the size is 255 chars but it could be bigger but never bigger then 1024 char.
+ * 1024 chars is the maximum chars that php "mb_" functions can accept.
+ *
+ * @param string $str
+ * @param integer $length
+ * @return void
+ */
+public function validateStrLength($str="", $length = 255){
+  // check max length accepted by "mb_" functions
+  // check the length  
+  _dp("mb Length: ", mb_strlen($str, 'UTF-8'), 1);
+  if( (mb_strlen($str, 'UTF-8') > $length) or ($length > 1024) ){
+    return false;
+  } else { return true;}
+}
+
+
+
+
 
 
 
